@@ -1,16 +1,28 @@
-# ci-cd-python - Commands to install Docker on EC2 
-- Ensure port 80 is available
-```
-sudo yum update -y
-sudo amazon-linux-extras install docker -y
-sudo service docker start
-sudo systemctl start docker
-sudo service docker status
-sudo groupadd docker
-sudo usermod -a -G docker ec2-user
-newgrp docker
-docker —-version
+# About the Repo
 
-# create ECR with name: my-flask-app
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 866824485776.dkr.ecr.us-east-1.amazonaws.com
+# Docker Commands
+
+```
+docker buildx build --platform=linux/amd64 -t manifoldailearning/gpt-project:v1 .
+# test locally
+# Test with CI CD
+docker push manifoldailearning/gpt-project:v1
+
+docker run -d -p 8080:80 manifoldailearning/gpt-project:v1
+docker run -p 8080:80 manifoldailearning/gpt-project:v1
+```
+
+# Kubernetes Code
+
+```
+kubectl create secret generic openai-secret --from-literal=API_KEY=<api-key>
+```
+
+# Important Code for Docker
+
+```
+docker buildx build --platform=linux/amd64 -t manifoldailearning/gpt-project:v1 .
+docker push yourusername/gpt-project:v1
+
+docker run -d -p 8001:80 manifoldailearning/gpt-project:v1
 ```
