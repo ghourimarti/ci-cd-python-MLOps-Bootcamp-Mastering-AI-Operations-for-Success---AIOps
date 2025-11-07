@@ -1,8 +1,5 @@
-# -----------------------------------------------------
-# Stage 1 — Base Image Setup
-# -----------------------------------------------------
 FROM python:3.10-slim-buster
-# FROM python:3.10-slim AS base
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -27,5 +24,5 @@ ENV PYTHONPATH "${PYTHONPATH}:/code"
 CMD pip install -e .
 
 CMD ["python","prediction_model/training_pipeline.py"]
-# WORKDIR /code
+WORKDIR /code
 CMD ["python","main.py"]

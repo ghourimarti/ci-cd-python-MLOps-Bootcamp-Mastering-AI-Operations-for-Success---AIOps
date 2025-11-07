@@ -1,0 +1,51 @@
+# -----------------------------------------------------
+# Stage 1 — Base Image Setup
+# -----------------------------------------------------
+FROM python:3.10-slim AS base
+
+# Prevent interactive prompts during build
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install essential system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# -----------------------------------------------------
+# Stage 2 — Application Setup
+# -----------------------------------------------------
+WORKDIR /app
+
+# Upgrade pip (and optionally pin version for reproducibility)
+RUN pip install --no-cache-dir --upgrade pip==24.2
+
+# Copy requirements first (for better caching)
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy entire project into image
+COPY . .
+
+# Optional: install your package (editable for development)
+# Uncomment if you have setup.py or pyproject.toml
+# RUN pip install -e .
+
+# -----------------------------------------------------
+# Stage 3 — Runtime Configuration
+# -----------------------------------------------------
+
+# Expose application port
+EXPOSE 8005
+
+# Set PYTHONPATH to ensure imports work
+ENV PYTHONPATH="${PYTHONPATH}:/app"
+
+# Run as non-root user for security
+RUN useradd -m appuser
+USER appuser
+
+# Default startup command
+CMD ["python", "main.py"]
