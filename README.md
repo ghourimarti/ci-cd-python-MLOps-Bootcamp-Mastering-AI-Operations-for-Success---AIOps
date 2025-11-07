@@ -45,7 +45,7 @@ curl -X 'POST' \
 # ci-cd-python - Commands to install Docker on EC2 
 - Ensure port 80 is available
 ```
-sudo yum update -y
+<!-- sudo yum update -y
 sudo amazon-linux-extras install docker -y
 sudo service docker start
 sudo systemctl start docker
@@ -53,8 +53,20 @@ sudo service docker status
 sudo groupadd docker
 sudo usermod -a -G docker ec2-user
 newgrp docker
-docker —-version
+docker —-version -->
+
+
+sudo dnf update -y
+sudo dnf install docker -y
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod -aG docker ec2-user
+
+aws configure
+enter all the details
 
 # create ECR with name: my-mlapp
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 866824485776.dkr.ecr.us-east-1.amazonaws.com
+
+
 ```
